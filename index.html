@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRIME VIDEO: The Brand Personality Game Show!</title>
+    <style>
+        /* Font Declarations */
+        @font-face {
+            font-family: 'KonstantGrotesk';
+            src: url('fonts/KonstantGrotesk.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'AmazonEmber';
+            src: url('fonts/AmazonEmber_Bd.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* CSS Variables */
+        :root {
+            /* Prime Video Brand Colors */
+            --prime-blue: #1399FF;
+            --squid-ink: #232F3E;
+            --white: #ffffff;
+            
+            /* Extended Palette */
+            --dark-bg: #0F171E;
+            --card-bg: #1A232E;
+            --text-muted: #8197A4;
+            --accent-gold: #FFA724;
+            
+            /* Personality Colors (Brand-aligned) */
+            --humble-green: #00A8E1;
+            --expert-blue: #1399FF;
+            --friend-orange: #FF9500;
+            --flex-purple: #8B5CF6;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Global Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'AmazonEmber', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--squid-ink) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'KonstantGrotesk', 'AmazonEmber', sans-serif;
+            font-weight: normal;
+            letter-spacing: -0.02em;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: var(--spacing-lg);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: rgba(26, 35, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-logo {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            background: linear-gradient(135deg, var(--prime-blue), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: -0.03em;
+        }
+
+        .tagline {
+            font-family: 'KonstantGrotesk', sans-serif;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .welcome.text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .welcome.text strong {
+            color: var(--prime-blue);
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .start-button, .lock-button, .replay-button {
+            font-family: 'KonstantGrotesk', sans-serif;
+            background: var(--prime-blue);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: 1.25rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button:hover, .lock-button:hover, .replay-button:hover {
+            background: #0080E5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(19, 153, 255, 0.3);
+        }
+
+        .start-button:active, .lock-button:active, .replay-button:active {
+            transform: translateY(0);
+        }
+
+        /* Question Screen */
+        .question-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .question-number {
+            font-family: 'KonstantGrotesk', sans-serif;
+            font-size: 1rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: var(--spacing-sm);
+            animation: slideInTop 0.5s ease-out;
+        }
+
+        .question-text {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: var(--spacing-xl);
+            animation: slideInTop 0.6s ease-out;
+        }
+
+        /* Choice Cards Grid */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .choice-card {
+            background: var(--card-bg);
+            padding: var(--spacing-lg);
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--prime-blue), var(--accent-gold));
+            transform: scaleX(0);
+            transition: transform var(--transition-smooth);
+        }
+
+        .choice-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(19, 153, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(19, 153, 255, 0.1);
+        }
+
+        .choice-card.previewing {
+            border-color: var(--prime-blue);
+            background: rgba(19, 153, 255, 0.1);
+        }
+
+        .choice-card.selected {
+            border-color: var(--prime-blue);
+            background: rgba(19, 153, 255, 0.15);
+        }
+
+        .choice-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .choice-title {
+            font-family: 'KonstantGrotesk', sans-serif;
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .choice-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .choice-indicator {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--prime-blue);
+            color: var(--white);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        /* Personality Meter */
+        .personality-meter {
+            background: rgba(26, 35, 46, 0.6);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-lg);
+            border-radius: 16px;
+            margin-bottom: var(--spacing-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meter-title {
+            font-family: 'KonstantGrotesk', sans-serif;
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--accent-gold);
+        }
+
+        .personality-bars {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .personality-bar {
+            opacity: 0.6;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .personality-bar.active {
+            opacity: 1;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xs);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .personality-bar.active .bar-label {
+            color: var(--white);
+        }
+
+        .bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 100px;
+            transition: width var(--transition-smooth);
+        }
+
+        .bar-fill.humble {
+            background: var(--humble-green);
+        }
+
+        .bar-fill.expert {
+            background: var(--expert-blue);
+        }
+
+        .bar-fill.friend {
+            background: var(--friend-orange);
+        }
+
+        .bar-fill.flex {
+            background: var(--flex-purple);
+        }
+
+        /* Results Screen */
+        .results-container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .winner-announcement {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: var(--spacing-xl);
+            color: var(--accent-gold);
+            animation: slideInTop 0.5s ease-out;
+        }
+
+        .results-card {
+            background: rgba(26, 35, 46, 0.8);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-xl);
+            border-radius: 20px;
+            margin-bottom: var(--spacing-xl);
+            border: 2px solid var(--prime-blue);
+            animation: slideInScale 0.6s ease-out;
+        }
+
+        @keyframes slideInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .trait-list {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: var(--spacing-lg) auto;
+        }
+
+        .trait-list li {
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            background: rgba(19, 153, 255, 0.1);
+            border-left: 4px solid var(--prime-blue);
+            border-radius: 8px;
+            transition: all var(--transition-smooth);
+        }
+
+        .trait-list li:hover {
+            background: rgba(19, 153, 255, 0.2);
+            transform: translateX(8px);
+        }
+
+        .strategic-insight {
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: rgba(255, 167, 36, 0.1);
+            border-radius: 12px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .final-scores {
+            background: rgba(26, 35, 46, 0.6);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-lg);
+            border-radius: 16px;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .final-score-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            color: var(--white);
+        }
+
+        .final-score-bar {
+            flex: 1;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .final-score-fill {
+            height: 100%;
+            border-radius: 100px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Animations */
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .bounce {
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Utility Classes */
+        .underbutton {
+            margin-top: var(--spacing-lg);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            :root {
+                --spacing-lg: 1.5rem;
+                --spacing-xl: 2rem;
+            }
+
+            .welcome-screen {
+                padding: var(--spacing-lg);
+            }
+
+            .choices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .personality-meter {
+                padding: var(--spacing-md);
+            }
+
+            .bar-label {
+                font-size: 0.75rem;
+            }
+
+            .results-container {
+                padding: var(--spacing-lg);
+            }
+
+            .trait-list li {
+                font-size: 0.9rem;
+            }
+
+            .final-score-item {
+                flex-wrap: wrap;
+            }
+
+            .final-score-item span:first-child {
+                width: 100%;
+                margin-bottom: var(--spacing-xs);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-logo {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1.5rem;
+            }
+
+            .choice-title {
+                font-size: 1.25rem;
+            }
+
+            .start-button, .lock-button, .replay-button {
+                font-size: 1rem;
+                padding: var(--spacing-sm) var(--spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="screen active">
+        <div class="welcome-screen">
+            <h1 class="game-logo">THIS OR THAT?</h1>
+            <p class="tagline">Play-at-Home Edition</p>
+            
+            <div class="welcome text">
+                <p>Remember when you picked between ideas like <strong>Be Kind, Rewind</strong> and <strong>TGIP</strong>?</p>
+                <p>You weren't just choosing campaigns...You were dialing Prime Video's brand personality.</p>
+                <p>&nbsp;</p>
+                <p><strong>Let's see what your choices REALLY mean.</strong></p>
+                </p>
+            </div>
+
+            <button class="start-button" onclick="startGame()">
+                PLAY!
+            </button>
+
+            <p class="underbutton">
+                🎯 5 Rounds • 🧠 4 Personalities • 🏆 1 Winner
+            </p>
+        </div>
+    </div>
+
+    <!-- Question Screens (dynamically generated) -->
+    <div id="questionScreen" class="screen">
+        <div class="question-container">
+            <div class="question-number" id="questionNumber">ROUND 1</div>
+            
+            <h2 class="question-text" id="questionText">Which idea caught your eye?</h2>
+            
+            <div class="choices-grid" id="choicesGrid">
+                <!-- Choices will be inserted here -->
+            </div>
+
+            <div class="personality-meter" id="personalityMeter">
+                <h3 class="meter-title">🎭 PERSONALITY BREAKDOWN 🎭</h3>
+                <div class="personality-bars">
+                    <div class="personality-bar" data-personality="humble">
+                        <div class="bar-label">
+                            <span>Humble & Helpful</span>
+                            <span id="humbleScore">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill humble" id="humbleBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="personality-bar" data-personality="expert">
+                        <div class="bar-label">
+                            <span>Deep Expertise</span>
+                            <span id="expertScore">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill expert" id="expertBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="personality-bar" data-personality="friend">
+                        <div class="bar-label">
+                            <span>Video-Hoarding Friend</span>
+                            <span id="friendScore">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill friend" id="friendBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="personality-bar" data-personality="flex">
+                        <div class="bar-label">
+                            <span>Unapologetic Flex</span>
+                            <span id="flexScore">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill flex" id="flexBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="lock-button" id="lockChoice" onclick="lockInChoice()" style="display: none;">
+                LOCK IT IN!
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen">
+        <div class="results-container">
+            <h1 class="winner-announcement">🏆 YOUR BRAND PERSONALITY IS... 🏆</h1>
+            
+            <div class="results-card" id="resultsCard">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="final-scores">
+                <h3 style="color: var(--accent-gold); margin-bottom: 1rem; font-size: 1.5rem;">Final Personality Breakdown:</h3>
+                <div id="finalScoresContainer">
+                    <!-- Final scores will be inserted here -->
+                </div>
+            </div>
+
+            <button class="replay-button" onclick="replayGame()">
+                PLAY AGAIN
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Game Data with personality DNA for each choice
+        const gameData = {
+            questions: [
+                {
+                    round: 1,
+                    question: "THIS OR THAT?: 90s Nostalgia",
+                    choices: [
+                        {
+                            title: "Be Kind, Rewind",
+                            description: "An IRL Prime Video store with scan-to-rent titles and a sneak peek section in the back only for Prime members",
+                            personalityDNA: {
+                                humble: 10,
+                                expert: 10,
+                                friend: 10,
+                                flex: 70
+                            },
+                            selected: true
+                        },
+                        {
+                            title: "TGIP",
+                            description: "A livestream of all your favorite early 90s sitcoms that ONLY streams Fridays from 8-10pm.",
+                            personalityDNA: {
+                                humble: 20,
+                                expert: 20,
+                                friend: 60,
+                                flex: 0
+                            },
+                            selected: false
+                        }
+                    ]
+                },
+                {
+                    round: 2,
+                    host: "Round 2! Let's talk data... but make it personal!",
+                    question: "THIS OR THAT?: Racking up the Numbers",
+                    choices: [
+                        {
+                            title: "Prime Numbers",
+                            description: "Similar to Spotify Wrapped, we will annually publish individual and collective viewing habits.",
+                            personalityDNA: {
+                                humble: 60,
+                                expert: 20,
+                                friend: 20,
+                                flex: 0
+                            },
+                            selected: true
+                        },
+                        {
+                            title: "The Prime Challenge",
+                            description: "A billion dollars is on the line for anyone who can watch every single thing available on Prime (Spoiler alert: It's impossible)",
+                            personalityDNA: {
+                                humble: 0,
+                                expert: 20,
+                                friend: 10,
+                                flex: 70
+                            },
+                            selected: false
+                        }
+                    ]
+                },
+                {
+                    round: 3,
+                    question: "THIS OR THAT?: Let's Get Phygital",
+                    choices: [
+                        {
+                            title: "Prime Seats",
+                            description: "Fans planted in the background at live sporting events hold signs with a title and timecode for people to hunt down that moment",
+                            personalityDNA: {
+                                humble: 20,
+                                expert: 50,
+                                friend: 10,
+                                flex: 20
+                            },
+                            selected: true
+                        },
+                        {
+                            title: "Prime Locations",
+                            description: "Geofence IRL areas that fans must visit to unlock exclusive content",
+                            personalityDNA: {
+                                humble: 0,
+                                expert: 40,
+                                friend: 10,
+                                flex: 50
+                            },
+                            selected: false
+                        }
+                    ]
+                },
+                {
+                    round: 4,
+                    host: "Round 4! How do we treat our biggest fans?",
+                    question: "THIS OR THAT?: Conquering New Lands",
+                    choices: [
+                        {
+                            title: "PFF (Prime Friends Forever)",
+                            description: "One SUPERFAN is invited to a WhatsApp group chat party, giving them access to talent and BTS team members for an hour.",
+                            personalityDNA: {
+                                humble: 40,
+                                expert: 30,
+                                friend: 30,
+                                flex: 0
+                            },
+                            selected: true
+                        },
+                        {
+                            title: "Sunday Scaries",
+                            description: "Every Sunday night, Prime Video goes live on LinkedIn for 5 minutes with clips of characters dramatically quitting their jobs",
+                            personalityDNA: {
+                                humble: 0,
+                                expert: 30,
+                                friend: 30,
+                                flex: 40
+                            },
+                            selected: false
+                        }
+                    ]
+                },
+                {
+                    round: 5,
+                    host: "Final Round! The ultimate question...",
+                    question: "THIS OR THAT?: Hype our Viewers",
+                    choices: [
+                        {
+                            title: "Loremasters",
+                            description: "Top superfan posts get added to Prime Video's X-Ray feature, displayed alongside cast info.",
+                            personalityDNA: {
+                                humble: 40,
+                                expert: 60,
+                                friend: 0,
+                                flex: 0
+                            },
+                            selected: true
+                        },
+                        {
+                            title: "Welcome to the Show",
+                            description: "The fans who tweeted the most about the previous season of a show get a walk on role in the upcoming season.",
+                            personalityDNA: {
+                                humble: 50,
+                                expert: 0,
+                                friend: 20,
+                                flex: 30
+                            },
+                            selected: false
+                        }
+                    ]
+                }
+            ]
+        };
+
+        let currentQuestion = 0;
+        let userChoices = [];
+        let currentPreviewChoice = null;
+        let lockedChoice = null;
+
+        function startGame() {
+            document.getElementById('welcomeScreen').classList.remove('active');
+            document.getElementById('questionScreen').classList.add('active');
+            
+            // Initialize user choices array
+            userChoices = gameData.questions.map(q => q.choices.findIndex(c => c.selected));
+            
+            loadQuestion(0);
+        }
+
+        function loadQuestion(index) {
+            const q = gameData.questions[index];
+            lockedChoice = null;
+            currentPreviewChoice = userChoices[index];
+            
+            // Update question info
+            document.getElementById('questionNumber').textContent = `ROUND ${q.round}`;
+            document.getElementById('questionText').textContent = q.question;
+            
+            // Create choice cards
+            const grid = document.getElementById('choicesGrid');
+            grid.innerHTML = '';
+            
+            q.choices.forEach((choice, i) => {
+                const card = document.createElement('div');
+                card.className = 'choice-card';
+                
+                // Start with the user's original choice selected
+                if (i === userChoices[index]) {
+                    card.classList.add('selected');
+                    currentPreviewChoice = i;
+                }
+                
+                card.innerHTML = `
+                    <div class="choice-title">${choice.title}</div>
+                    <div class="choice-description">${choice.description}</div>
+                    <div class="choice-indicator" style="display: ${i === userChoices[index] ? 'block' : 'none'}">
+                        ✓ CHOICE ON THE CALL
+                    </div>
+                `;
+                
+                card.onclick = () => previewChoice(index, i);
+                
+                // Add entrance animation
+                card.style.animationDelay = `${i * 0.2}s`;
+                card.style.animation = 'slideInLeft 0.5s ease-out both';
+                
+                grid.appendChild(card);
+            });
+            
+            // Show personality DNA for the initially selected choice
+            updatePersonalityDNA(q.choices[userChoices[index]].personalityDNA);
+            
+            // Show/hide lock button
+            document.getElementById('lockChoice').style.display = 'inline-block';
+            
+            // Update button text for last question
+            if (index === gameData.questions.length - 1) {
+                document.getElementById('lockChoice').textContent = 'SEE MY RESULTS! 🎯';
+            } else {
+                document.getElementById('lockChoice').textContent = 'LOCK IT IN! 🔒';
+            }
+        }
+
+        function previewChoice(questionIndex, choiceIndex) {
+            currentPreviewChoice = choiceIndex;
+            
+            // Update visual selection
+            const cards = document.querySelectorAll('.choice-card');
+            cards.forEach((c, i) => {
+                c.classList.remove('selected', 'previewing');
+                if (i === choiceIndex) {
+                    c.classList.add('previewing');
+                }
+            });
+            
+            // Update personality DNA display
+            const choice = gameData.questions[questionIndex].choices[choiceIndex];
+            updatePersonalityDNA(choice.personalityDNA);
+            
+            // Show if this was their original choice
+            cards.forEach((card, i) => {
+                const indicator = card.querySelector('.choice-indicator');
+                if (indicator) {
+                    indicator.style.display = i === userChoices[questionIndex] ? 'block' : 'none';
+                }
+            });
+        }
+
+        function updatePersonalityDNA(dna) {
+            // Update each personality bar
+            Object.keys(dna).forEach(personality => {
+                const bar = document.getElementById(`${personality}Bar`);
+                const score = document.getElementById(`${personality}Score`);
+                const container = document.querySelector(`[data-personality="${personality}"]`);
+                
+                if (bar && score) {
+                    bar.style.width = `${dna[personality]}%`;
+                    score.textContent = `${dna[personality]}%`;
+                    
+                    // Highlight active personalities
+                    if (dna[personality] > 0) {
+                        container.classList.add('active');
+                    } else {
+                        container.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        function lockInChoice() {
+            if (currentPreviewChoice !== null) {
+                // Update the user's choice for this question
+                userChoices[currentQuestion] = currentPreviewChoice;
+                lockedChoice = currentPreviewChoice;
+                
+                // Visual feedback
+                const cards = document.querySelectorAll('.choice-card');
+                cards.forEach((c, i) => {
+                    c.classList.remove('selected', 'previewing');
+                    if (i === currentPreviewChoice) {
+                        c.classList.add('selected', 'bounce');
+                    }
+                });
+                
+                // Move to next question or show results
+                setTimeout(() => {
+                    if (currentQuestion < gameData.questions.length - 1) {
+                        currentQuestion++;
+                        loadQuestion(currentQuestion);
+                    } else {
+                        showResults();
+                    }
+                }, 1000);
+            }
+        }
+
+        function calculateFinalPersonality() {
+            const totals = {
+                humble: 0,
+                expert: 0,
+                friend: 0,
+                flex: 0
+            };
+            
+            // Sum up personality scores from all choices
+            userChoices.forEach((choiceIndex, questionIndex) => {
+                const choice = gameData.questions[questionIndex].choices[choiceIndex];
+                Object.keys(choice.personalityDNA).forEach(personality => {
+                    totals[personality] += choice.personalityDNA[personality];
+                });
+            });
+            
+            // Find the winner
+            let winner = 'humble';
+            let maxScore = 0;
+            Object.keys(totals).forEach(personality => {
+                if (totals[personality] > maxScore) {
+                    maxScore = totals[personality];
+                    winner = personality;
+                }
+            });
+            
+            return { totals, winner };
+        }
+
+        function showResults() {
+            document.getElementById('questionScreen').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            const { totals, winner } = calculateFinalPersonality();
+            
+            // Personality data
+            const personalities = {
+                humble: {
+                    name: "HUMBLE & HELPFUL",
+                    color: "var(--humble-green)",
+                    traits: [
+                        "Warm, fan-considerate, gently curated",
+                        "Wants Prime to feel like a place people trust",
+                        "Values emotional intelligence and elegant reward"
+                    ],
+                    insight: "The ideas you chose say <strong>\"We see you\"</strong> more than <strong>\"Look at us!\"</strong> Prime Video emerges as <strong>more sidekick than main character</strong>, <strong>more companion than challenger</strong>."
+                },
+                expert: {
+                    name: "DEEP EXPERTISE",
+                    color: "var(--expert-blue)",
+                    traits: [
+                        "Sophisticated, curated, culturally fluent",
+                        "Wants Prime to be the connoisseur's choice",
+                        "Values quality signals and insider knowledge"
+                    ],
+                    insight: "Your choices reveal a brand that <strong>embeds culture cleverly</strong> and <strong>prefers signal over scale</strong>. Prime Video becomes the <strong>deep cuts platform</strong>."
+                },
+                friend: {
+                    name: "VIDEO-HOARDING FRIEND",
+                    color: "var(--friend-orange)",
+                    traits: [
+                        "Nostalgic, relatable, comfort-focused",
+                        "Wants Prime to feel like an obsessed superfan",
+                        "Values shared experiences and emotional connection"
+                    ],
+                    insight: "Your selections show a brand built on <strong>love for video</strong> and <strong>shared memories</strong>. Prime Video as <strong>your favorite viewing companion</strong>."
+                },
+                flex: {
+                    name: "UNAPOLOGETIC FLEX",
+                    color: "var(--flex-purple)",
+                    traits: [
+                        "Bold, confident, culture-defining",
+                        "Wants Prime to dominate the conversation",
+                        "Values spectacle and unmissable presence"
+                    ],
+                    insight: "Your choices have that <strong>\"Only on Prime\"</strong> swagger. Prime Video is <strong>the main character</strong> in every story, while the competition is relegated to the background"
+                }
+            };
+            
+            const winnerData = personalities[winner];
+            
+            // Update results card
+            document.getElementById('resultsCard').innerHTML = `
+                <h2 style="font-size: 3rem; color: ${winnerData.color}; margin-bottom: 2rem;">${winnerData.name}!</h2>
+                
+                <p style="font-size: 1.3rem; line-height: 1.8; margin-bottom: 2rem;">
+                    ${winnerData.insight}
+                </p>
+
+                <h3 style="font-size: 1.5rem; color: var(--accent-gold); margin: 2rem 0;">Your Brand Profile:</h3>
+                
+                <ul class="trait-list">
+                    ${winnerData.traits.map(trait => `<li>${trait}</li>`).join('')}
+                </ul>
+
+                <div class="strategic-insight">
+                    <h3 style="color: var(--prime-blue); margin-bottom: 1rem;">Strategic Insight:</h3>
+                    <p>
+                        Your choices across all ${gameData.questions.length} rounds consistently pointed toward 
+                        <strong>${winnerData.name}</strong> as Prime Video's natural personality.
+                    </p>
+                </div>
+            `;
+            
+            // Update final scores
+            const scoresContainer = document.getElementById('finalScoresContainer');
+            scoresContainer.innerHTML = '';
+            
+            // Sort personalities by score
+            const sortedPersonalities = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+            
+            sortedPersonalities.forEach((personality, index) => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'final-score-item';
+                scoreItem.innerHTML = `
+                    <span style="font-weight: 700; min-width: 180px;">${personalities[personality].name}</span>
+                    <div class="final-score-bar">
+                        <div class="final-score-fill ${personality}" style="width: 0%; background: ${personalities[personality].color};"></div>
+                    </div>
+                    <span style="font-weight: 700; min-width: 60px; text-align: right;">${totals[personality]}</span>
+                `;
+                scoresContainer.appendChild(scoreItem);
+                
+                // Animate the bars
+                setTimeout(() => {
+                    const maxTotal = Math.max(...Object.values(totals));
+                    scoreItem.querySelector('.final-score-fill').style.width = `${(totals[personality] / maxTotal) * 100}%`;
+                }, 100 + (index * 200));
+            });
+            
+            // Epic confetti celebration
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => createConfetti(), i * 50);
+            }
+        }
+
+        function replayGame() {
+            currentQuestion = 0;
+            document.getElementById('resultsScreen').classList.remove('active');
+            document.getElementById('welcomeScreen').classList.add('active');
+        }
+
+        function createConfetti() {
+            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#FFA724', '#00A8E1'];
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+    </script>
+</body>
+</html>
