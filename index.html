@@ -635,7 +635,7 @@
             </div>
 
             <div class="final-scores">
-                <h3 style="color: var(--accent-gold); margin-bottom: 1rem; font-size: 1.5rem;">Final Personality Breakdown:</h3>
+                <h3 style="color: var(--accent-gold); margin-bottom: 1rem; font-size: 1.5rem;">Final Personality Breakdown</h3>
                 <div id="finalScoresContainer">
                     <!-- Final scores will be inserted here -->
                 </div>
@@ -1028,19 +1028,11 @@
                     ${winnerData.insight}
                 </p>
 
-                <h3 style="font-size: 1.5rem; color: var(--accent-gold); margin: 2rem 0;">Your Brand Profile:</h3>
+                <h3 style="font-size: 1.5rem; color: var(--accent-gold); margin: 2rem 0;">Your Character Profile</h3>
                 
                 <ul class="trait-list">
                     ${winnerData.traits.map(trait => `<li>${trait}</li>`).join('')}
                 </ul>
-
-                <div class="strategic-insight">
-                    <h3 style="color: var(--prime-blue); margin-bottom: 1rem;">Strategic Insight:</h3>
-                    <p>
-                        Your choices across all ${gameData.questions.length} rounds consistently pointed toward 
-                        <strong>${winnerData.name}</strong> as Prime Video's natural personality.
-                    </p>
-                </div>
             `;
             
             // Update final scores
@@ -1081,20 +1073,6 @@
             document.getElementById('welcomeScreen').classList.add('active');
         }
 
-        function createConfetti() {
-            const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#FFA724', '#00A8E1'];
-            for (let i = 0; i < 10; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 3000);
-            }
-        }
 
     </script>
 </body>
